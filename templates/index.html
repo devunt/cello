@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="upper-container">
+        <div class="messages">
+            <div class="message">
+                <div class="message-nick"></div>
+                <div class="message-text"></div>
+            </div>
+        </div>
+        <div class="">
+
+        </div>
+    </div>
+    <div class="lower-container">
+        <div id="message-inputbox" class="disabled">
+            <div class="message-inputbox-nick">닉네임자리</div>
+            <button type="button" class="btn btn-square btn-primary" id="message-inputbox-btn" data-type="last" disabled>Send</button>
+            <div class="message-inputbox-input-wrapper">
+                <input type="text" id="message-inputbox-input" disabled>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js" integrity="sha256-WKvqiY0jZHWQZIohYEmr9KUC5rEaYEOFTq+ByllJK8w=" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/cello.js') }}"></script>
+{% endblock %}
