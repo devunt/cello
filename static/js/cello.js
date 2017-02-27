@@ -1,17 +1,31 @@
 var socket = io('/services/message');
 
 function init() {
+    var messageInputBoxNick = document.getElementById('message-inputbox-nick');
     var messageInputBox = document.getElementById('message-inputbox');
     var messageInputBoxInput = document.getElementById('message-inputbox-input');
     var messageInputBoxBtn = document.getElementById('message-inputbox-btn');
     var channel = "";
+    var nickname = "";
 
     socket.on('connect', function () {
         socket.emit('initialize');
     });
 
-    socket.on('initialized', function () {
-        setMessageInputBoxStatus(true);
+    socket.on('disconnect', function() {
+        enableMessageInputBox(false);
+    });
+
+    socket.on('initialized', function (data) {
+        if (data.nickname) {
+            nickname = data.nickname;
+            messageInputBoxNick.innerHTML = nickname;
+        }
+        if (data.last_channel) {
+            channel = data.last_channel;
+        }
+
+        prepareInputBoxInput();
     });
 
     socket.on('message', function (data) {
@@ -19,13 +33,30 @@ function init() {
     });
 
     socket.on('message-sent', function () {
-        setMessageInputBoxStatus(true);
-        messageInputBoxInput.value = '';
-        messageInputBoxInput.focus();
+        prepareInputBoxInput();
+    });
+
+    socket.on('channel-joined', function (data) {
+        console.log(data);
+        if (data.user == null || data.user == nickname) {
+            channel = data.channel;
+        }
+        prepareInputBoxInput();
+    });
+
+    socket.on('nick-changed', function (data) {
+        console.log(data);
+        if (data.old == nickname) {
+            nickname = data.new;
+            messageInputBoxNick.innerHTML = data.new;
+        } else {
+            // TODO: Change other user's nickname
+        }
+        prepareInputBoxInput();
     });
 
     socket.on('disconnect', function () {
-        setMessageInputBoxStatus(false);
+        enableMessageInputBox(false);
     });
 
     messageInputBoxBtn.addEventListener('click', sendMessage);
@@ -54,7 +85,13 @@ function init() {
         }
     }
 
-    function setMessageInputBoxStatus(enable) {
+    function prepareInputBoxInput() {
+        messageInputBoxInput.value = '';
+        enableMessageInputBox(true);
+        messageInputBoxInput.focus();
+    }
+
+    function enableMessageInputBox(enable) {
         if (enable) {
             messageInputBoxInput.removeAttribute('disabled');
             messageInputBoxBtn.removeAttribute('disabled');

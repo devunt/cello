@@ -3,7 +3,7 @@ import functools
 from flask_login import current_user
 from flask_restful import Api, Resource
 from flask_socketio import Namespace, SocketIO
-from flask_socketio import join_room, leave_room
+from flask_socketio import emit, join_room, leave_room
 
 from models import db
 from models import Channel
@@ -30,28 +30,33 @@ class MessageService(Namespace):
         pass
 
     def on_initialize(self):
+        data = {}
+        data['authenticated'] = current_user.is_authenticated
         if current_user.is_authenticated:
+            data['nickname'] = current_user.name
+            data['channels'] = []
             for channel in current_user.channels:
-                print(channel)
                 join_room(channel.name)
-        self.emit('initialized')
+                data['channels'].append(channel.name)
+        emit('initialized', data)
 
-    def on_join(self, name):
-        channel = Channel.get(name)
+    def on_join(self, channel_name):
+        channel = Channel.get(channel_name)
         if current_user.is_authenticated:
             if channel is None:
-                channel = Channel(name)
+                channel = Channel(channel_name)
                 db.session.add(channel)
-            current_user.channels.add(channel)
-            join_room(name)
+            if channel not in current_user.channels:
+                current_user.channels.append(channel)
+                join_room(channel_name)
             db.session.commit()
-            data = {'channel': channel, 'user': current_user.name}
+            data = {'channel': channel_name, 'user': current_user.name}
         else:
             if channel is None:
                 data = {'channel': None}
             else:
-                data = {'channel': name}
-        self.emit('channel-joined', data)
+                data = {'channel': channel_name}
+        emit('channel-joined', data, room=channel_name, include_self=True)
 
     @authenticated_only
     def on_nick(self, new_nick):
@@ -59,16 +64,16 @@ class MessageService(Namespace):
         current_user.name = new_nick
         db.session.commit()
         data = {'old': old, 'new': new_nick}
-        emit('nick-changed', data)
+        emit('nick-changed', data, broadcast=True, include_self=True)
 
     @authenticated_only
-    def on_message(self, channel, message):
-        channel = Channel.get(channel)
+    def on_message(self, channel_name, message):
+        channel = Channel.get(channel_name)
         if channel is None:
             return
-        self.emit('message-sent')
-        data = {'channel': channel, 'message': message, 'user': current_user.name}
-        self.emit('message', data, room=channel, include_self=True)
+        emit('message-sent')
+        data = {'channel': channel_name, 'message': message, 'user': current_user.name}
+        emit('message', data, room=channel_name, include_self=True)
 
 
 api = Api()
