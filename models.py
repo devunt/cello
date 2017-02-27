@@ -17,6 +17,8 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False, unique=True)
     tokens = db.relationship('OAuthToken', backref='user')
+    last_channel = db.relationship('Channel')
+    last_channel_id = db.Column(db.Integer, db.ForeignKey('channel.id'))
 
     def __init__(self):
         rnum = random.randint(1, 10000)

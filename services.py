@@ -34,6 +34,8 @@ class MessageService(Namespace):
         data['authenticated'] = current_user.is_authenticated
         if current_user.is_authenticated:
             data['nickname'] = current_user.name
+            if current_user.last_channel is not None:
+                data['last_channel'] = current_user.last_channel.name
             data['channels'] = []
             for channel in current_user.channels:
                 join_room(channel.name)
@@ -49,6 +51,7 @@ class MessageService(Namespace):
             if channel not in current_user.channels:
                 current_user.channels.append(channel)
                 join_room(channel_name)
+            current_user.last_channel = channel
             db.session.commit()
             data = {'channel': channel_name, 'user': current_user.name}
         else:
