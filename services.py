@@ -54,6 +54,14 @@ class MessageService(Namespace):
         self.emit('channel-joined', data)
 
     @authenticated_only
+    def on_nick(self, new_nick):
+        old = current_user.name
+        current_user.name = new_nick
+        db.session.commit()
+        data = {'old': old, 'new': new_nick}
+        emit('nick-changed', data)
+
+    @authenticated_only
     def on_message(self, channel, message):
         channel = Channel.get(channel)
         if channel is None:

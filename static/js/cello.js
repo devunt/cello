@@ -36,8 +36,22 @@ function init() {
     });
 
     function sendMessage() {
-        setMessageInputBoxStatus(false);
-        socket.emit('message', channel, messageInputBoxInput.value);
+        enableMessageInputBox(false);
+
+        var message = messageInputBoxInput.value;
+        if (message.indexOf('/') == 0) {
+            var split = message.substr(1).split(' ');
+            var args = split.slice(1);
+            processCommand(split[0], args);
+        } else {
+            socket.emit('message', channel, messageInputBoxInput.value);
+        }
+    }
+
+    function processCommand(command, args) {
+        if (commandHandler[command](args)) {
+            enableMessageInputBox(true);
+        }
     }
 
     function setMessageInputBoxStatus(enable) {
