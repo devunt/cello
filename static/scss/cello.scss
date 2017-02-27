@@ -20,18 +20,18 @@ body {
   border-radius: 0;
 }
 
-.wrapper {
+#wrapper {
   position: relative;
   min-height: 100%;
 
   border: 1px dashed black;
 }
 
-.upper-container {
+#upper-container {
   padding-bottom: $lower-container-height;
 }
 
-.lower-container {
+#lower-container {
   position: absolute;
   bottom: 0;
 
@@ -46,7 +46,7 @@ body {
   height: 100%;
 }
 
-.message-inputbox-nick {
+#message-inputbox-nick {
   float: left;
 
   height: 100%;
@@ -57,7 +57,7 @@ body {
   font-weight: bold;
 }
 
-.message-inputbox-input-wrapper {
+#message-inputbox-input-wrapper {
   height: 100%;
 
   overflow: hidden;

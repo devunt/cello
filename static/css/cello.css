@@ -12,15 +12,15 @@ body {
 .btn.btn-square {
   border-radius: 0; }
 
-.wrapper {
+#wrapper {
   position: relative;
   min-height: 100%;
   border: 1px dashed black; }
 
-.upper-container {
+#upper-container {
   padding-bottom: 40px; }
 
-.lower-container {
+#lower-container {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -31,14 +31,14 @@ body {
   width: 100%;
   height: 100%; }
 
-.message-inputbox-nick {
+#message-inputbox-nick {
   float: left;
   height: 100%;
   line-height: 40px;
   padding-left: 10px;
   font-weight: bold; }
 
-.message-inputbox-input-wrapper {
+#message-inputbox-input-wrapper {
   height: 100%;
   overflow: hidden; }
 
