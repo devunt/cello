@@ -120,7 +120,9 @@ function init() {
 
         message.setAttribute('data-hash', hash);
 
-        getCurrentMessageList().appendChild(message);
+        var messageList = getCurrentMessageList()
+        messageList.appendChild(message);
+        messageList.scrollIntoView(false);
     }
 
     function addSystemMessage(message) {

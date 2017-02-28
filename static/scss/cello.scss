@@ -124,7 +124,7 @@ html, body {
 
   .message {
     position: relative;
-    margin-bottom: 5px;
+    padding-bottom: 5px;
 
     &:hover {
       .message-action {
@@ -147,7 +147,7 @@ html, body {
 
     .message-nick {
       display: inline-block;
-      margin-right: 10px;
+      margin-right: 15px;
       width: 120px;
 
       font-weight: bold;
@@ -157,7 +157,7 @@ html, body {
 
     .message-text {
       display: inline-block;
-      width: calc(100% - 185px);
+      width: calc(100% - 225px);
 
       word-wrap: break-word;
       vertical-align: top;
@@ -181,7 +181,7 @@ html, body {
   float: left;
   padding: 10px 10px 40px 10px;
   width: 100%;
-  height: calc(100% - 40px);
+  height: calc(100% - 85px);
 
   overflow-x: hidden;
   overflow-y: scroll;

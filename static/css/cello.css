@@ -74,7 +74,7 @@ html, body {
     height: 100%; }
   #chatting-wrapper .message {
     position: relative;
-    margin-bottom: 5px; }
+    padding-bottom: 5px; }
     #chatting-wrapper .message:hover .message-action {
       display: block; }
     #chatting-wrapper .message .message-time {
@@ -86,13 +86,13 @@ html, body {
       height: 100%; }
     #chatting-wrapper .message .message-nick {
       display: inline-block;
-      margin-right: 10px;
+      margin-right: 15px;
       width: 120px;
       font-weight: bold;
       text-align: right; }
     #chatting-wrapper .message .message-text {
       display: inline-block;
-      width: calc(100% - 185px);
+      width: calc(100% - 225px);
       word-wrap: break-word;
       vertical-align: top; }
     #chatting-wrapper .message .message-action {
@@ -107,7 +107,7 @@ html, body {
   float: left;
   padding: 10px 10px 40px 10px;
   width: 100%;
-  height: calc(100% - 40px);
+  height: calc(100% - 85px);
   overflow-x: hidden;
   overflow-y: scroll;
   box-sizing: border-box; }
