@@ -1,42 +1,135 @@
 $lower-container-height: 40px;
 $send-button-width: 60px;
+$disabled-bg-color:  rgb(235, 235, 228);
+$disabled-fg-color: #808080;
+$theme-color : #1f2c30;
+$point-color : #81e5e1;
+$btn : #3D575E;
+$btn-hover : #30454b;
 
+@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);
 
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-}
 
-body {
-  padding: 10px 20px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  font-family: 'Spoqa Han Sans', sans-serif;
 }
 
 .disabled {
-  background-color: rgb(235, 235, 228);
+  color: $disabled-fg-color;
+  background-color: $disabled-bg-color;
+
+  input[type="text"] {
+    color: $disabled-fg-color;
+  }
 }
 
-.btn.btn-square {
-  border-radius: 0;
+.btn {
+  padding: 0 15px;
+
+  border-style: none;
+
+  color: white;
+  background-color: $btn;
+
+  &:hover {
+    background-color: $btn-hover;
+    transition: 0.15s;
+  }
+
+  &:disabled {
+    background-color: #b6cbd0;
+  }
+
+  .btn-square {
+    border-radius: 0;
+  }
 }
 
-#wrapper {
+#channel-list-wrapper {
+  float: left;
+  padding: 15px 25px;
+  height: 100%;
+  width: 18%;
+
+  background-color: $theme-color;
+
+  box-sizing: border-box;
+
+  i {
+    float: right;
+    padding: 3px;
+
+    color: $point-color;
+  }
+
+  .title {
+    padding-bottom: 10px;
+
+    color: $point-color;
+    font-size: 1em;
+    font-weight: bold;
+  }
+
+  #channel-list {
+    list-style: none;
+    padding-left: 0;
+
+    .channel {
+      padding: 2px 0;
+
+      font-size: .95em;
+      color: #ccc;
+    }
+
+    .channel.current {
+      font-weight: bold;
+      color: #fff;
+    }
+  }
+}
+
+#chatting-wrapper {
   position: relative;
+  display: inline-block;
   min-height: 100%;
+  width: 67%;
 
-  border: 1px dashed black;
+  border-right: 1px solid lightgrey;
+
+  box-sizing: border-box;
+  vertical-align: top;
+
+  .channel-title {
+    padding: 12px;
+    border-bottom: 1px solid #ccc;
+
+    font-weight: bold;
+  }
+
+  .message-nick {
+    display: inline-block;
+  }
+
+  .message-text {
+    display: inline-block;
+  }
 }
 
 #upper-container {
-  padding-bottom: $lower-container-height;
-}
+  float: left;
+  padding: 10px 10px 40px 10px;
+  width: 100%;
+  height: calc(100% - 40px);
 
-#messages {
+  overflow-x: hidden;
+  overflow-y: scroll;
 
-}
-
-#metadata {
-
+  box-sizing: border-box;
 }
 
 #lower-container {
@@ -90,4 +183,139 @@ body {
   float: right;
 
   height: 100%;
+}
+
+#user-list {
+  float: right;
+  width: 15%;
+  padding: 19px;
+
+  box-sizing: border-box;
+
+  .title {
+    padding-bottom: 10px;
+
+    font-size: .9em;
+  }
+
+  .user {
+    padding: 3px 0;
+
+    font-size: .8em;
+  }
+}
+
+#chatting-wrapper {
+  position: relative;
+  display: inline-block;
+  min-height: 100%;
+  width: 67%;
+
+  border-right: 1px solid lightgrey;
+
+  vertical-align: top;
+
+  .channel-title {
+    padding: 12px;
+    border-bottom: 1px solid #ccc;
+
+    font-weight: bold;
+  }
+
+  .message-nick {
+    display: inline-block;
+  }
+
+  .message-text {
+    display: inline-block;
+  }
+
+  .disabled {
+    background-color: $disabled-bg-color;
+  }
+
+  .btn.btn-square {
+    border-radius: 0;
+  }
+}
+
+#upper-container {
+  float: left;
+  padding: 10px 10px 40px 10px;
+  width: 100%;
+  height: calc(100% - 40px);
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+#lower-container {
+  position: absolute;
+  bottom: 0;
+
+  width: 100%;
+  height: $lower-container-height;
+
+  border-top: 1px solid #ccc;
+}
+
+#message-inputbox {
+  width: 100%;
+  height: 100%;
+}
+
+#message-inputbox-nick {
+  float: left;
+
+  height: 100%;
+  line-height: $lower-container-height;
+
+  padding-left: 10px;
+
+  font-weight: bold;
+}
+
+#message-inputbox-input-wrapper {
+  height: 100%;
+
+  overflow: hidden;
+}
+
+#message-inputbox-input {
+  width: 100%;
+  height: 100%;
+
+  padding: 0 1em;
+
+  border: none;
+  outline: none;
+
+  overflow: hidden;
+  resize: none;
+
+  font-size: 1.1em;
+}
+
+#message-inputbox-btn {
+  float: right;
+
+  height: 100%;
+}
+
+#user-list {
+  float: right;
+  width: 15%;
+  padding: 19px;
+
+  .title {
+    padding-bottom: 10px;
+
+    font-size: .9em;
+  }
+
+  .user {
+    padding: 3px 0;
+
+    font-size: .8em;
+  }
 }

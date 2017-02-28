@@ -1,21 +1,33 @@
 {% extends 'base.html' %}
+{% block title %}{% endblock %}
 {% block body %}
-    <div id="upper-container">
-        <div id="messages">
-            <div class="message">
-                <div class="message-nick"></div>
-                <div class="message-text"></div>
+    <div id="channel-list-wrapper">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        <div class="title">CHANNELS</div>
+        <ul id="channel-list">
+        </ul>
+    </div>
+
+    <div id="chatting-wrapper">
+        <div class="channel-title">
+            #meow
+        </div>
+
+        <div id="upper-container">
+            <div id="messages">
+                <div class="message">
+                    <div class="message-nick"></div>
+                    <div class="message-text"></div>
+                </div>
             </div>
         </div>
-        <div id="metadata">
-        </div>
-    </div>
-    <div id="lower-container">
-        <div id="message-inputbox" class="disabled">
-            <div id="message-inputbox-nick"></div>
-            <button type="button" class="btn btn-square btn-primary" id="message-inputbox-btn" data-type="last" disabled>Send</button>
-            <div id="message-inputbox-input-wrapper">
-                <input type="text" id="message-inputbox-input" disabled>
+        <div id="lower-container">
+            <div id="message-inputbox" class="disabled">
+                <div id="message-inputbox-nick"></div>
+                <button type="button" class="btn btn-square" id="message-inputbox-btn" data-type="last" disabled>Send</button>
+                <div id="message-inputbox-input-wrapper">
+                    <input type="text" id="message-inputbox-input" disabled>
+                </div>
             </div>
         </div>
     </div>
