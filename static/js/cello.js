@@ -143,7 +143,7 @@ function init() {
     }
 
     function addSystemMessage(channelName, message) {
-        addMessage(channelName, '*', messge, '*');
+        addMessage(channelName, '*', message, '*');
     }
 
     function addSystemAnnouncement(message) {
