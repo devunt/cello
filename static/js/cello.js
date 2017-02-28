@@ -38,7 +38,7 @@ function init() {
 
     socket.on('message', function (data) {
         if (data.channel == getCurrentChannelName()) {
-            addMessage(data.user, data.message);
+            addMessage(data.user, data.message, data.hash);
         }
     });
 
@@ -74,7 +74,7 @@ function init() {
         }
     });
 
-    function addMessage(nick, text) {
+    function addMessage(nick, text, hash) {
         var time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric'});
         var message = document.createElement('div');
         var messageTime = document.createElement('div');
@@ -94,11 +94,13 @@ function init() {
         message.appendChild(messageNick);
         message.appendChild(messageText);
 
+        message.setAttribute('data-hash', hash);
+
         getCurrentMessageList().appendChild(message);
     }
 
     function addSystemMessage(message) {
-        addMessage('*', message);
+        addMessage('*', message, '*');
     }
 
     function getCurrentChannelName() {

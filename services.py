@@ -1,4 +1,6 @@
 import functools
+import hashlib
+import time
 
 from flask_login import current_user
 from flask_restful import Api, Resource
@@ -15,6 +17,22 @@ def authenticated_only(f):
         if current_user.is_authenticated:
             return f(*args, **kwargs)
     return wrapped
+
+
+def calculate_hash(user_id, message):
+    h = hashlib.sha256(str(user_id).encode()).hexdigest()
+    m = hashlib.sha256()
+    m.update(message.encode())
+    m.update(str(time.time()).encode())
+    h += m.hexdigest()
+    return h
+
+
+def verify_hash(user_id, message_hash):
+    if len(message_hash) != 128:
+        return False
+    h = hashlib.sha256(str(user_id).encode()).hexdigest()
+    return h == message_hash[:64]
 
 
 class ChannelService(Resource):
@@ -85,7 +103,8 @@ class MessageService(Namespace):
         if channel is None:
             return
         emit('message-sent')
-        data = {'channel': channel_name, 'message': message, 'user': current_user.name}
+        message_hash = calculate_hash(current_user.id, message)
+        data = {'channel': channel_name, 'message': message, 'user': current_user.name, 'hash': message_hash}
         emit('message', data, room=channel_name, include_self=True)
 
 
