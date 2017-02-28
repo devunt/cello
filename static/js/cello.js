@@ -18,7 +18,7 @@ function init() {
 
     socket.on('disconnect', function() {
         enableMessageInputBox(false);
-        addSystemMessage('You are disconnected.');
+        addSystemAnnouncement('You are disconnected.');
     });
 
     socket.on('initialized', function (data) {
@@ -29,7 +29,7 @@ function init() {
 
         data.channels.forEach(addChannel);
 
-        addSystemMessage('Connected to the server.');
+        addSystemAnnouncement('Connected to the server.');
         prepareInputBoxInput();
 
         if (window.location.hash) {
@@ -39,7 +39,7 @@ function init() {
 
     socket.on('message', function (data) {
         if (data.channel == getCurrentChannelName()) {
-            addMessage(data.user, data.message, data.hash);
+            addMessage(data.user, data.message, data.hash, false);
         }
     });
 
@@ -92,7 +92,7 @@ function init() {
         }
     });
 
-    function addMessage(nick, text, hash) {
+    function addMessage(nick, text, hash, announcement) {
         var time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric'});
         var message = document.createElement('div');
         var messageTime = document.createElement('div');
@@ -128,13 +128,25 @@ function init() {
 
         message.setAttribute('data-hash', hash);
 
-        var messageList = getCurrentMessageList()
-        messageList.appendChild(message);
-        messageList.scrollIntoView(false);
+        var messageLists = [];
+        if (announcement) {
+            messageLists = document.querySelectorAll('.message-list');
+        } else {
+            messageLists = [getCurrentMessageList()];
+        }
+
+        messageLists.forEach(function(messageList) {
+            messageList.appendChild(message.cloneNode(true));
+            messageList.scrollIntoView(false);
+        });
     }
 
     function addSystemMessage(message) {
-        addMessage('*', message, '*');
+        addMessage('*', message, '*', false);
+    }
+
+    function addSystemAnnouncement(message) {
+        addMessage('*', message, '*', true);
     }
 
     function getCurrentChannelName() {
@@ -177,6 +189,7 @@ function init() {
         var messageList = document.createElement('div');
         messageList.id = getMessageListId(channelInfo.name)
         messageList.setAttribute('data-channel-name', channelInfo.name);
+        messageList.classList.add('message-list');
         messageList.classList.add('hidden');
         messageListContainer.appendChild(messageList);
 
