@@ -15,6 +15,8 @@ def authenticated_only(f):
     def wrapped(*args, **kwargs):
         if current_user.is_authenticated:
             return f(*args, **kwargs)
+        else:
+            emit('error', {'message': 'You have to login first.'})
     return wrapped
 
 
@@ -57,6 +59,9 @@ class MessageService(Namespace):
         emit('initialized', data)
 
     def on_join(self, channel_name):
+        if not channel_name.startswith('#'):
+            emit('error', {'message': 'Channel name should start with a #'})
+            return
         channel = Channel.get(channel_name)
         if current_user.is_authenticated:
             if channel is None:
@@ -79,6 +84,7 @@ class MessageService(Namespace):
     def on_part(self, channel_name):
         channel = Channel.get(channel_name)
         if channel not in current_user.channels:
+            emit('error', {'message': 'You cannot leave a channel that you didn\'t join.'})
             return
         current_user.channels.remove(channel)
         db.session.commit()
@@ -106,21 +112,27 @@ class MessageService(Namespace):
     def on_message(self, channel_name, message, message_hash=None):
         channel = Channel.get(channel_name)
         if channel is None:
+            emit('error', {'message': 'You have to join a channel before writing something.'})
             return
         emit('message-sent')
         if message_hash is None:
             message_hash = calculate_hash(current_user.id, message)
             data = {'channel': channel_name, 'message': message, 'user': current_user.name, 'hash': message_hash}
             emit('message', data, room=channel_name, include_self=True)
-        elif verify_hash(current_user.id, message_hash):
-            data = {'hash': message_hash, 'message': message}
-            emit('message-edited', data, room=channel_name, include_self=True)
+        else:
+            if verify_hash(current_user.id, message_hash):
+                data = {'hash': message_hash, 'message': message}
+                emit('message-edited', data, room=channel_name, include_self=True)
+            else:
+                emit('error', {'message': 'Hash verification failed.'})
 
     @authenticated_only
     def on_message_delete(self, channel_name, message_hash):
         if verify_hash(current_user.id, message_hash):
             data = {'hash': message_hash}
             emit('message-deleted', data, room=channel_name, include_self=True)
+        else:
+            emit('error', {'message': 'Hash verification failed.'})
 
 
 socketio = SocketIO()

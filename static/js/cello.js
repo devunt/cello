@@ -95,6 +95,11 @@ function init() {
         prepareInputBoxInput();
     });
 
+    socket.on('error', function (data) {
+        addSystemMessage(getCurrentChannelName(), data.message);
+        prepareInputBoxInput();
+    });
+
     messageInputBoxBtn.addEventListener('click', sendMessage);
     messageInputBoxInput.addEventListener('keypress', function (e) {
         if (e.keyCode == 13) {
@@ -168,7 +173,7 @@ function init() {
         if (currentChannel) {
             return currentChannel.getAttribute('data-channel-name');
         } else {
-            return null;
+            return '#default';
         }
     }
 
