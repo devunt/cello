@@ -8,12 +8,11 @@ from login import login_manager
 from models import db
 from models import OAuthToken, User
 from providers import oauth_providers, oauth_response_keys
-from services import api, socketio
+from services import socketio
 
 
 app = Flask(__name__)
 app.config.from_object('settings.DevelopmentConfig')
-api.init_app(app)
 db.init_app(app)
 socketio.init_app(app)
 login_manager.init_app(app)

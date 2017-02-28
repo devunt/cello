@@ -3,7 +3,6 @@ import hashlib
 import time
 
 from flask_login import current_user
-from flask_restful import Api, Resource
 from flask_socketio import Namespace, SocketIO
 from flask_socketio import emit, join_room, leave_room
 
@@ -33,11 +32,6 @@ def verify_hash(user_id, message_hash):
         return False
     h = hashlib.sha256(str(user_id).encode()).hexdigest()
     return h == message_hash[:64]
-
-
-class ChannelService(Resource):
-    def get(self):
-        return {}
 
 
 class MessageService(Namespace):
@@ -117,9 +111,6 @@ class MessageService(Namespace):
             data = {'hash': message_hash}
             emit('message-deleted', data, room=channel_name, include_self=True)
 
-
-api = Api()
-api.add_resource(ChannelService, '/services/channel')
 
 socketio = SocketIO()
 socketio.on_namespace(MessageService('/services/message'))
