@@ -33,7 +33,6 @@ function init() {
     });
 
     socket.on('message', function (data) {
-        console.log(data);
         if (data.channel == getCurrentChannelName()) {
             addMessage(data.user, data.message);
         }
@@ -44,7 +43,6 @@ function init() {
     });
 
     socket.on('channel-joined', function (data) {
-        console.log(data);
         if (data.user == null || data.user == current_nickname) {
             data.channel.current = true;
             var channel = addChannel(data.channel);
@@ -55,7 +53,6 @@ function init() {
     });
 
     socket.on('nick-changed', function (data) {
-        console.log(data);
         if (data.old == current_nickname) {
             current_nickname = data.new;
             messageInputBoxNick.innerHTML = data.new;
@@ -64,10 +61,6 @@ function init() {
             // TODO: Change other user's nickname
         }
         prepareInputBoxInput();
-    });
-
-    socket.on('disconnect', function () {
-        enableMessageInputBox(false);
     });
 
     messageInputBoxBtn.addEventListener('click', sendMessage);
