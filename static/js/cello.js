@@ -18,7 +18,7 @@ function init() {
 
     socket.on('disconnect', function() {
         enableMessageInputBox(false);
-        addSystemAnnouncement('You are disconnected.');
+        addSystemAnnouncement('Disconnected from the server.');
     });
 
     socket.on('initialized', function (data) {
