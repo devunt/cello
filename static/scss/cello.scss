@@ -246,7 +246,7 @@ html, body {
   height: 100%;
 }
 
-#user-list {
+#user-list-wrapper {
   float: right;
   width: 15%;
   padding: 19px;
@@ -259,9 +259,16 @@ html, body {
     font-size: .9em;
   }
 
-  .user {
-    padding: 3px 0;
+  #user-list {
+    list-style: none;
+    padding-left: 0;
 
-    font-size: .8em;
+    .user {
+      padding: 3px 0;
+
+      font-size: .8em;
+
+      cursor: pointer;
+    }
   }
 }

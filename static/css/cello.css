@@ -150,16 +150,20 @@ html, body {
   float: right;
   height: 100%; }
 
-#user-list {
+#user-list-wrapper {
   float: right;
   width: 15%;
   padding: 19px;
   box-sizing: border-box; }
-  #user-list .title {
+  #user-list-wrapper .title {
     padding-bottom: 10px;
     font-size: .9em; }
-  #user-list .user {
-    padding: 3px 0;
-    font-size: .8em; }
+  #user-list-wrapper #user-list {
+    list-style: none;
+    padding-left: 0; }
+    #user-list-wrapper #user-list .user {
+      padding: 3px 0;
+      font-size: .8em;
+      cursor: pointer; }
 
 /*# sourceMappingURL=cello.css.map */
