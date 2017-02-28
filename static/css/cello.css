@@ -61,7 +61,7 @@ html, body {
   border-right: 1px solid lightgrey;
   box-sizing: border-box;
   vertical-align: top; }
-  #chatting-wrapper .channel-title {
+  #chatting-wrapper #channel-title {
     padding: 12px;
     border-bottom: 1px solid #ccc;
     font-weight: bold; }

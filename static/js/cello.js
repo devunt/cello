@@ -2,6 +2,7 @@ var socket = io('/services/message');
 
 function init() {
     var channelList = document.getElementById('channel-list');
+    var channelTitle = document.getElementById('channel-title');
     var messageInputBoxNick = document.getElementById('message-inputbox-nick');
     var messageInputBox = document.getElementById('message-inputbox');
     var messageInputBoxInput = document.getElementById('message-inputbox-input');
@@ -40,7 +41,9 @@ function init() {
         console.log(data);
         if (data.user == null || data.user == current_nickname) {
             data.channel.current = true;
-            addChannel(data.channel);
+            var channel = addChannel(data.channel);
+            changeChannel(channel);
+            addSystemMessage('Joined into ' + data.channel.name);
         }
         prepareInputBoxInput();
     });
@@ -86,11 +89,7 @@ function init() {
         channel.classList.add('channel');
         channel.innerHTML = channelInfo.name;
         if (channelInfo.current) {
-            if (currentChannel !== null) {
-                currentChannel.classList.remove('current');
-            }
-            channel.classList.add('current');
-            currentChannel = channel;
+            changeChannel(channel);
         }
         channelList.appendChild(channel);
 
@@ -104,10 +103,13 @@ function init() {
         if (!newChannel.classList.contains('channel')) {
             return;
         }
-
-        currentChannel.classList.remove('current');
+        if (currentChannel !== null) {
+            currentChannel.classList.remove('current');
+        }
         currentChannel = newChannel;
         currentChannel.classList.add('current');
+        channelTitle.innerHTML = getCurrentChannelName();
+        messageList.innerHTML = '';
         messageInputBoxInput.focus();
     }
 
