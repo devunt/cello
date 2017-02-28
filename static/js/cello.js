@@ -2,6 +2,7 @@ var socket = io('/services/message');
 
 function init() {
     var channelList = document.getElementById('channel-list');
+    var messageList = document.getElementById('message-list');
     var channelTitle = document.getElementById('channel-title');
     var messageInputBoxNick = document.getElementById('message-inputbox-nick');
     var messageInputBox = document.getElementById('message-inputbox');
@@ -16,6 +17,7 @@ function init() {
 
     socket.on('disconnect', function() {
         enableMessageInputBox(false);
+        addSystemMessage('You are disconnected.');
     });
 
     socket.on('initialized', function (data) {
@@ -26,11 +28,15 @@ function init() {
 
         data.channels.forEach(addChannel);
 
+        addSystemMessage('Connected to the server.');
         prepareInputBoxInput();
     });
 
     socket.on('message', function (data) {
         console.log(data);
+        if (data.channel == getCurrentChannelName()) {
+            addMessage(data.user, data.message);
+        }
     });
 
     socket.on('message-sent', function () {
@@ -54,6 +60,7 @@ function init() {
             current_nickname = data.new;
             messageInputBoxNick.innerHTML = data.new;
         } else {
+            addSystemMessage(data.old + ' changed their nickname to ' + data.new);
             // TODO: Change other user's nickname
         }
         prepareInputBoxInput();
@@ -69,6 +76,33 @@ function init() {
             sendMessage();
         }
     });
+
+    function addMessage(nick, text) {
+        var time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric'});
+        var message = document.createElement('div');
+        var messageTime = document.createElement('div');
+        var messageNick = document.createElement('div');
+        var messageText = document.createElement('div');
+
+        message.classList.add('message');
+        messageTime.classList.add('message-time');
+        messageNick.classList.add('message-nick');
+        messageText.classList.add('message-text');
+
+        messageTime.innerHTML = time;
+        messageNick.innerHTML = nick;
+        messageText.innerHTML = text;
+
+        message.appendChild(messageTime);
+        message.appendChild(messageNick);
+        message.appendChild(messageText);
+
+        messageList.appendChild(message);
+    }
+
+    function addSystemMessage(message) {
+        addMessage('*', message);
+    }
 
     function getCurrentChannelName() {
         return currentChannel.getAttribute('data-channel-name');
