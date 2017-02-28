@@ -24,7 +24,7 @@ function init() {
     socket.on('initialized', function (data) {
         if (data.nickname) {
             current_nickname = data.nickname;
-            messageInputBoxNick.innerHTML = current_nickname;
+            messageInputBoxNick.innerText = current_nickname;
         }
 
         data.channels.forEach(addChannel);
@@ -46,7 +46,7 @@ function init() {
     socket.on('message-edit', function (data) {
         var message = document.querySelector('[data-hash="' + data.hash + '"]');
         var messageText = message.querySelector('.message-text');
-        messageText.innerHTML = data.message;
+        messageText.innerText = data.message;
     });
 
     socket.on('message-delete', function (data) {
@@ -71,7 +71,7 @@ function init() {
     socket.on('nick-changed', function (data) {
         if (data.old == current_nickname) {
             current_nickname = data.new;
-            messageInputBoxNick.innerHTML = data.new;
+            messageInputBoxNick.innerText = data.new;
         } else {
             addSystemMessage(data.old + ' changed their nickname to ' + data.new);
             // TODO: Change other user's nickname
@@ -98,9 +98,9 @@ function init() {
         messageNick.classList.add('message-nick');
         messageText.classList.add('message-text');
 
-        messageTime.innerHTML = time;
-        messageNick.innerHTML = nick;
-        messageText.innerHTML = text;
+        messageTime.innerText = time;
+        messageNick.innerText = nick;
+        messageText.innerText = text;
 
         message.appendChild(messageTime);
         message.appendChild(messageNick);
@@ -163,7 +163,7 @@ function init() {
             changeChannel(e.target);
         });
         channel.classList.add('channel');
-        channel.innerHTML = channelInfo.name;
+        channel.innerText = channelInfo.name;
         channelList.appendChild(channel);
 
         var messageList = document.createElement('div');
@@ -195,7 +195,7 @@ function init() {
         getCurrentMessageList().classList.remove('hidden');
 
         var channelName = getCurrentChannelName();
-        channelTitle.innerHTML = channelName;
+        channelTitle.innerText = channelName;
         socket.emit('channel_change', channelName);
 
         messageInputBoxInput.focus();
