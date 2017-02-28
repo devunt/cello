@@ -64,6 +64,14 @@ class MessageService(Namespace):
         emit('channel-joined', data, room=channel_name, include_self=True)
 
     @authenticated_only
+    def on_channel_change(self, channel_name):
+        channel = Channel.get(channel_name)
+        if channel is None:
+            return
+        current_user.last_channel = channel
+        db.session.commit()
+
+    @authenticated_only
     def on_nick(self, new_nick):
         old = current_user.name
         current_user.name = new_nick

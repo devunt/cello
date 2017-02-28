@@ -168,6 +168,8 @@ function init() {
 
         var channelName = getCurrentChannelName();
         channelTitle.innerHTML = channelName;
+        socket.emit('channel_change', channelName);
+
         messageInputBoxInput.focus();
     }
 
