@@ -77,6 +77,7 @@ class MessageService(Namespace):
             if channel is None:
                 data = {'channel': None}
             else:
+                join_room(channel_name)
                 data = {'channel': {'name': channel_name}}
         emit('channel-joined', data, room=channel_name, include_self=True)
 

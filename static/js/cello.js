@@ -60,6 +60,9 @@ function init() {
 
     socket.on('channel-joined', function (data) {
         if (data.user == null || data.user == current_nickname) {
+            if (data.user == null && authenticated) {
+                return;
+            }
             data.channel.current = true;
             var channel = addChannel(data.channel);
             changeChannel(channel);
@@ -251,7 +254,9 @@ function init() {
 
         var channelName = getCurrentChannelName();
         channelTitle.innerText = channelName;
-        socket.emit('channel_change', channelName);
+        if (authenticated) {
+            socket.emit('channel_change', channelName);
+        }
 
         messageInputBoxInput.focus();
     }
