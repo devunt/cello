@@ -30,16 +30,13 @@ html, body {
     border-radius: 0; }
 
 #channel-list-wrapper {
+  position: relative;
   float: left;
   padding: 15px 25px;
   height: 100%;
   width: 18%;
   background-color: #1f2c30;
   box-sizing: border-box; }
-  #channel-list-wrapper i {
-    float: right;
-    padding: 3px;
-    color: #81e5e1; }
   #channel-list-wrapper .title {
     padding-bottom: 10px;
     color: #81e5e1;
@@ -56,6 +53,16 @@ html, body {
     #channel-list-wrapper #channel-list .channel.current {
       font-weight: bold;
       color: #fff; }
+  #channel-list-wrapper #login {
+    position: absolute;
+    bottom: 20px; }
+    #channel-list-wrapper #login i {
+      margin-right: 3px;
+      color: white; }
+    #channel-list-wrapper #login .login-btn {
+      padding: 11px 0;
+      margin-bottom: 5px;
+      width: 100%; }
 
 #chatting-wrapper {
   position: relative;

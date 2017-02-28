@@ -55,6 +55,7 @@ html, body {
 }
 
 #channel-list-wrapper {
+  position: relative;
   float: left;
   padding: 15px 25px;
   height: 100%;
@@ -63,13 +64,6 @@ html, body {
   background-color: $theme-color;
 
   box-sizing: border-box;
-
-  i {
-    float: right;
-    padding: 3px;
-
-    color: $point-color;
-  }
 
   .title {
     padding-bottom: 10px;
@@ -95,6 +89,23 @@ html, body {
     .channel.current {
       font-weight: bold;
       color: #fff;
+    }
+  }
+
+  #login {
+    position: absolute;
+    bottom: 20px;
+
+    i {
+      margin-right: 3px;
+
+      color: white;
+    }
+
+    .login-btn {
+      padding: 11px 0;
+      margin-bottom: 5px;
+      width: 100%;
     }
   }
 }
