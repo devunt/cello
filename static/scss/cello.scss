@@ -149,6 +149,7 @@ html, body {
       font-size: 0.8em;
     }
 
+    #message-list-default,
     .message-list {
       position: absolute;
 
@@ -222,8 +223,6 @@ html, body {
   line-height: $lower-container-height;
 
   padding: 0 10px;
-
-  background-color: white;
 
   font-weight: bold;
 }

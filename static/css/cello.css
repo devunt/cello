@@ -87,6 +87,7 @@ html, body {
     #chatting-wrapper .message .message-time {
       display: inline-block;
       font-size: 0.8em; }
+    #chatting-wrapper .message #message-list-default,
     #chatting-wrapper .message .message-list {
       position: absolute;
       width: 100%;
@@ -135,7 +136,6 @@ html, body {
   height: 100%;
   line-height: 40px;
   padding: 0 10px;
-  background-color: white;
   font-weight: bold; }
 
 #message-inputbox-input-wrapper {
