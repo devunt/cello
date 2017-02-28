@@ -238,6 +238,10 @@ html, body {
   resize: none;
 
   box-sizing: border-box;
+
+  &:not([data-editing-hash='']) {
+    color: #8b0000;
+  }
 }
 
 #message-inputbox-btn {

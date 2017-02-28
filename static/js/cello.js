@@ -43,10 +43,11 @@ function init() {
         }
     });
 
-    socket.on('message-edit', function (data) {
+    socket.on('message-edited', function (data) {
         var message = document.querySelector('[data-hash="' + data.hash + '"]');
         var messageText = message.querySelector('.message-text');
         messageText.innerText = data.message;
+        prepareInputBoxInput();
     });
 
     socket.on('message-delete', function (data) {
@@ -82,7 +83,12 @@ function init() {
     messageInputBoxBtn.addEventListener('click', sendMessage);
     messageInputBoxInput.addEventListener('keypress', function (e) {
         if (e.keyCode == 13) {
-            sendMessage();
+            var hash = messageInputBoxInput.getAttribute('data-editing-hash');
+            if (hash) {
+                editMessage(hash);
+            } else {
+                sendMessage();
+            }
         }
     });
 
@@ -109,7 +115,9 @@ function init() {
         if (nick == current_nickname) {
             var messageAction = messageActionHolder.cloneNode(true);
             messageAction.querySelector('.message-edit').addEventListener('click', function() {
-                // TODO: Edit message
+                messageInputBoxInput.value = messageText.textContent;
+                messageInputBoxInput.setAttribute('data-editing-hash', hash);
+                messageInputBoxInput.focus();
             });
             messageAction.querySelector('.message-delete').addEventListener('click', function() {
                 socket.emit('message_delete', getCurrentChannelName(), hash);
@@ -214,6 +222,11 @@ function init() {
         }
     }
 
+    function editMessage(hash) {
+        var message = messageInputBoxInput.value;
+        socket.emit('message', getCurrentChannelName(), message, hash)
+    }
+
     function processCommand(command, args) {
         var handler = commandHandler[command];
         if (!handler) {
@@ -226,6 +239,7 @@ function init() {
 
     function prepareInputBoxInput() {
         messageInputBoxInput.value = '';
+        messageInputBoxInput.setAttribute('data-editing-hash', '');
         enableMessageInputBox(true);
         messageInputBoxInput.focus();
     }

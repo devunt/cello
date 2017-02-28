@@ -98,14 +98,18 @@ class MessageService(Namespace):
         emit('nick-changed', data, broadcast=True, include_self=True)
 
     @authenticated_only
-    def on_message(self, channel_name, message):
+    def on_message(self, channel_name, message, message_hash=None):
         channel = Channel.get(channel_name)
         if channel is None:
             return
         emit('message-sent')
-        message_hash = calculate_hash(current_user.id, message)
-        data = {'channel': channel_name, 'message': message, 'user': current_user.name, 'hash': message_hash}
-        emit('message', data, room=channel_name, include_self=True)
+        if message_hash is None:
+            message_hash = calculate_hash(current_user.id, message)
+            data = {'channel': channel_name, 'message': message, 'user': current_user.name, 'hash': message_hash}
+            emit('message', data, room=channel_name, include_self=True)
+        elif verify_hash(current_user.id, message_hash):
+            data = {'hash': message_hash, 'message': message}
+            emit('message-edited', data, room=channel_name, include_self=True)
 
     @authenticated_only
     def on_message_delete(self, channel_name, message_hash):

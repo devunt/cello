@@ -145,6 +145,8 @@ html, body {
   overflow: hidden;
   resize: none;
   box-sizing: border-box; }
+  #message-inputbox-input:not([data-editing-hash='']) {
+    color: #8b0000; }
 
 #message-inputbox-btn {
   float: right;
