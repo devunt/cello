@@ -1,12 +1,13 @@
 var socket = io('/services/message');
 
 function init() {
+    var channelList = document.getElementById('channel-list');
     var messageInputBoxNick = document.getElementById('message-inputbox-nick');
     var messageInputBox = document.getElementById('message-inputbox');
     var messageInputBoxInput = document.getElementById('message-inputbox-input');
     var messageInputBoxBtn = document.getElementById('message-inputbox-btn');
-    var channel = "";
-    var nickname = "";
+    var currentChannel = null;
+    var current_nickname = "";
 
     socket.on('connect', function () {
         socket.emit('initialize');
@@ -18,12 +19,11 @@ function init() {
 
     socket.on('initialized', function (data) {
         if (data.nickname) {
-            nickname = data.nickname;
-            messageInputBoxNick.innerHTML = nickname;
+            current_nickname = data.nickname;
+            messageInputBoxNick.innerHTML = current_nickname;
         }
-        if (data.last_channel) {
-            channel = data.last_channel;
-        }
+
+        data.channels.forEach(addChannel);
 
         prepareInputBoxInput();
     });
@@ -38,16 +38,17 @@ function init() {
 
     socket.on('channel-joined', function (data) {
         console.log(data);
-        if (data.user == null || data.user == nickname) {
-            channel = data.channel;
+        if (data.user == null || data.user == current_nickname) {
+            data.channel.current = true;
+            addChannel(data.channel);
         }
         prepareInputBoxInput();
     });
 
     socket.on('nick-changed', function (data) {
         console.log(data);
-        if (data.old == nickname) {
-            nickname = data.new;
+        if (data.old == current_nickname) {
+            current_nickname = data.new;
             messageInputBoxNick.innerHTML = data.new;
         } else {
             // TODO: Change other user's nickname
@@ -66,6 +67,50 @@ function init() {
         }
     });
 
+    function getCurrentChannelName() {
+        return currentChannel.getAttribute('data-channel-name');
+    }
+
+    function addChannel(channelInfo) {
+        var existingChannel = document.querySelector('[data-channel-name="' + channelInfo.name + '"]');
+        if (existingChannel !== null) {
+            changeChannel(existingChannel);
+            return existingChannel;
+        }
+
+        var channel = document.createElement('li');
+        channel.setAttribute('data-channel-name', channelInfo.name);
+        channel.addEventListener('click', function (e) {
+            changeChannel(e.target);
+        });
+        channel.classList.add('channel');
+        channel.innerHTML = channelInfo.name;
+        if (channelInfo.current) {
+            if (currentChannel !== null) {
+                currentChannel.classList.remove('current');
+            }
+            channel.classList.add('current');
+            currentChannel = channel;
+        }
+        channelList.appendChild(channel);
+
+        return channel;
+    }
+
+    function changeChannel(newChannel) {
+        if (currentChannel == newChannel) {
+            return;
+        }
+        if (!newChannel.classList.contains('channel')) {
+            return;
+        }
+
+        currentChannel.classList.remove('current');
+        currentChannel = newChannel;
+        currentChannel.classList.add('current');
+        messageInputBoxInput.focus();
+    }
+
     function sendMessage() {
         enableMessageInputBox(false);
 
@@ -75,7 +120,7 @@ function init() {
             var args = split.slice(1);
             processCommand(split[0], args);
         } else {
-            socket.emit('message', channel, messageInputBoxInput.value);
+            socket.emit('message', getCurrentChannelName(), messageInputBoxInput.value);
         }
     }
 

@@ -34,12 +34,14 @@ class MessageService(Namespace):
         data['authenticated'] = current_user.is_authenticated
         if current_user.is_authenticated:
             data['nickname'] = current_user.name
-            if current_user.last_channel is not None:
-                data['last_channel'] = current_user.last_channel.name
             data['channels'] = []
             for channel in current_user.channels:
                 join_room(channel.name)
-                data['channels'].append(channel.name)
+                info = {'name': channel.name, 'current': False}
+                if current_user.last_channel is not None:
+                    if current_user.last_channel == channel:
+                        info['current'] = True
+                data['channels'].append(info)
         emit('initialized', data)
 
     def on_join(self, channel_name):
@@ -53,12 +55,12 @@ class MessageService(Namespace):
                 join_room(channel_name)
             current_user.last_channel = channel
             db.session.commit()
-            data = {'channel': channel_name, 'user': current_user.name}
+            data = {'channel': {'name': channel_name}, 'user': current_user.name}
         else:
             if channel is None:
                 data = {'channel': None}
             else:
-                data = {'channel': channel_name}
+                data = {'channel': {'name': channel_name}}
         emit('channel-joined', data, room=channel_name, include_self=True)
 
     @authenticated_only
