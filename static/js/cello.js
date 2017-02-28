@@ -42,6 +42,11 @@ function init() {
         }
     });
 
+    socket.on('message-delete', function (data) {
+        var message = document.querySelector('[data-hash="' + data.hash + '"]');
+        message.parentNode.removeChild(message);
+    });
+
     socket.on('message-sent', function () {
         prepareInputBoxInput();
     });
@@ -186,6 +191,11 @@ function init() {
         } else {
             socket.emit('message', getCurrentChannelName(), messageInputBoxInput.value);
         }
+    }
+
+    function deleteMessage(message) {
+        var hash = message.getAttribute('data-hash');
+        socket.emit('message_delete', getCurrentChannelName(), hash);
     }
 
     function processCommand(command, args) {

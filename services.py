@@ -107,6 +107,12 @@ class MessageService(Namespace):
         data = {'channel': channel_name, 'message': message, 'user': current_user.name, 'hash': message_hash}
         emit('message', data, room=channel_name, include_self=True)
 
+    @authenticated_only
+    def on_message_delete(self, channel_name, message_hash):
+        if verify_hash(current_user.id, message_hash):
+            data = {'hash': message_hash}
+            emit('message-delete', data, room=channel_name, include_self=True)
+
 
 api = Api()
 api.add_resource(ChannelService, '/services/channel')
