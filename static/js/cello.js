@@ -2,7 +2,7 @@ var socket = io('/services/message');
 
 function init() {
     var channelList = document.getElementById('channel-list');
-    var messageList = document.getElementById('message-list');
+    var messageListContainer = document.getElementById('message-list-container');
     var channelTitle = document.getElementById('channel-title');
     var messageInputBoxNick = document.getElementById('message-inputbox-nick');
     var messageInputBox = document.getElementById('message-inputbox');
@@ -94,7 +94,7 @@ function init() {
         message.appendChild(messageNick);
         message.appendChild(messageText);
 
-        messageList.appendChild(message);
+        getCurrentMessageList().appendChild(message);
     }
 
     function addSystemMessage(message) {
@@ -102,7 +102,24 @@ function init() {
     }
 
     function getCurrentChannelName() {
-        return currentChannel.getAttribute('data-channel-name');
+        if (currentChannel) {
+            return currentChannel.getAttribute('data-channel-name');
+        } else {
+            return null;
+        }
+    }
+
+    function getCurrentMessageList() {
+        var channelName = getCurrentChannelName();
+        if (channelName === null) {
+            return null;
+        }
+
+        return document.getElementById(getMessageListId(channelName));
+    }
+
+    function getMessageListId(channelName) {
+        return 'message-list-' + channelName.substr(1);
     }
 
     function addChannel(channelInfo) {
@@ -119,10 +136,17 @@ function init() {
         });
         channel.classList.add('channel');
         channel.innerHTML = channelInfo.name;
+        channelList.appendChild(channel);
+
+        var messageList = document.createElement('div');
+        messageList.id = getMessageListId(channelInfo.name)
+        messageList.setAttribute('data-channel-name', channelInfo.name);
+        messageList.classList.add('hidden');
+        messageListContainer.appendChild(messageList);
+
         if (channelInfo.current) {
             changeChannel(channel);
         }
-        channelList.appendChild(channel);
 
         return channel;
     }
@@ -136,11 +160,14 @@ function init() {
         }
         if (currentChannel !== null) {
             currentChannel.classList.remove('current');
+            getCurrentMessageList().classList.add('hidden');
         }
         currentChannel = newChannel;
         currentChannel.classList.add('current');
-        channelTitle.innerHTML = getCurrentChannelName();
-        messageList.innerHTML = '';
+        getCurrentMessageList().classList.remove('hidden');
+
+        var channelName = getCurrentChannelName();
+        channelTitle.innerHTML = channelName;
         messageInputBoxInput.focus();
     }
 

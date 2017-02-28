@@ -7,6 +7,9 @@ html, body {
   line-height: 1.42857143;
   font-family: 'Spoqa Han Sans', sans-serif; }
 
+.hidden {
+  display: none; }
+
 .disabled {
   color: #808080;
   background-color: #ebebe4; }
@@ -65,6 +68,13 @@ html, body {
     padding: 12px;
     border-bottom: 1px solid #ccc;
     font-weight: bold; }
+  #chatting-wrapper #message-list-container {
+    width: 100%;
+    height: 100%; }
+  #chatting-wrapper .message-list {
+    position: absolute;
+    width: 100%;
+    height: 100%; }
   #chatting-wrapper .message-nick {
     display: inline-block; }
   #chatting-wrapper .message-text {
