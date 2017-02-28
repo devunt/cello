@@ -76,6 +76,17 @@ class MessageService(Namespace):
         emit('channel-joined', data, room=channel_name, include_self=True)
 
     @authenticated_only
+    def on_part(self, channel_name):
+        channel = Channel.get(channel_name)
+        if channel not in current_user.channels:
+            return
+        current_user.channels.remove(channel)
+        db.session.commit()
+        data = {'channel': {'name': channel_name}, 'user': current_user.name}
+        emit('channel-parted', data, room=channel_name, include_self=True)
+        leave_room(channel_name)
+
+    @authenticated_only
     def on_channel_change(self, channel_name):
         channel = Channel.get(channel_name)
         if channel is None:

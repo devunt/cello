@@ -70,6 +70,20 @@ function init() {
         }
     });
 
+    socket.on('channel-parted', function (data) {
+        console.log(data);
+        if (data.user == current_nickname) {
+            removeChannel(data.channel);
+            var channel = document.querySelector('.channel');
+            if (channel) {
+                changeChannel(channel);
+            }
+            prepareInputBoxInput();
+        } else {
+            addSystemMessage(data.channel.name, data.user + ' left ' + data.channel.name);
+        }
+    });
+
     socket.on('nick-changed', function (data) {
         if (data.old == current_nickname) {
             current_nickname = data.new;
@@ -200,6 +214,21 @@ function init() {
         return channel;
     }
 
+    function removeChannel(channelInfo) {
+        var channel = document.querySelector('[data-channel-name="' + channelInfo.name + '"]');
+        if (!channel) {
+            return;
+        }
+
+        channel.parentNode.removeChild(channel);
+
+        var messageList = document.getElementById(getMessageListId(channelInfo.name));
+        messageList.parentNode.removeChild(messageList);
+
+        channelTitle.innerText = '';
+        currentChannel = null;
+    }
+
     function changeChannel(newChannel) {
         if (currentChannel == newChannel) {
             return;
@@ -245,7 +274,7 @@ function init() {
         if (!handler) {
             addSystemMessage('No such command');
             enableMessageInputBox(true);
-        } else if (handler(args)) {
+        } else if (handler(args, getCurrentChannelName())) {
             enableMessageInputBox(true);
         }
     }
