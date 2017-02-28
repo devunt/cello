@@ -115,7 +115,7 @@ class MessageService(Namespace):
     def on_message_delete(self, channel_name, message_hash):
         if verify_hash(current_user.id, message_hash):
             data = {'hash': message_hash}
-            emit('message-delete', data, room=channel_name, include_self=True)
+            emit('message-deleted', data, room=channel_name, include_self=True)
 
 
 api = Api()

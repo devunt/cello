@@ -50,7 +50,7 @@ function init() {
         prepareInputBoxInput();
     });
 
-    socket.on('message-delete', function (data) {
+    socket.on('message-deleted', function (data) {
         var message = document.querySelector('[data-hash="' + data.hash + '"]');
         message.parentNode.removeChild(message);
     });
@@ -218,7 +218,7 @@ function init() {
             var args = split.slice(1);
             processCommand(split[0], args);
         } else {
-            socket.emit('message', getCurrentChannelName(), messageInputBoxInput.value);
+            socket.emit('message', getCurrentChannelName(), message);
         }
     }
 
