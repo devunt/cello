@@ -25,12 +25,13 @@ function init() {
         if (data.nickname) {
             current_nickname = data.nickname;
             messageInputBoxNick.innerText = current_nickname;
+
+            data.channels.forEach(addChannel);
+
+            prepareInputBoxInput();
         }
 
-        data.channels.forEach(addChannel);
-
         addSystemAnnouncement('Connected to the server.');
-        prepareInputBoxInput();
 
         if (window.location.hash) {
             processCommand('join', [window.location.hash]);
@@ -38,9 +39,7 @@ function init() {
     });
 
     socket.on('message', function (data) {
-        if (data.channel == getCurrentChannelName()) {
-            addMessage(data.user, data.message, data.hash, false);
-        }
+        addMessage(data.channel, data.user, data.message, data.hash);
     });
 
     socket.on('message-edited', function (data) {
@@ -64,9 +63,11 @@ function init() {
             data.channel.current = true;
             var channel = addChannel(data.channel);
             changeChannel(channel);
-            addSystemMessage('Joined into ' + data.channel.name);
+            addSystemMessage(data.channel.name, 'Joined into ' + data.channel.name);
+            prepareInputBoxInput();
+        } else {
+            addSystemMessage(data.channel.name, data.user + ' joined ' + data.channel.name);
         }
-        prepareInputBoxInput();
     });
 
     socket.on('nick-changed', function (data) {
@@ -74,7 +75,7 @@ function init() {
             current_nickname = data.new;
             messageInputBoxNick.innerText = data.new;
         } else {
-            addSystemMessage(data.old + ' changed their nickname to ' + data.new);
+            addSystemAnnouncement(data.old + ' changed their nickname to ' + data.new);
             // TODO: Change other user's nickname
         }
         prepareInputBoxInput();
@@ -92,7 +93,7 @@ function init() {
         }
     });
 
-    function addMessage(nick, text, hash, announcement) {
+    function addMessage(channelName, nick, text, hash) {
         var time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric'});
         var message = document.createElement('div');
         var messageTime = document.createElement('div');
@@ -129,10 +130,10 @@ function init() {
         message.setAttribute('data-hash', hash);
 
         var messageLists = [];
-        if (announcement) {
+        if (channelName == '*') {
             messageLists = document.querySelectorAll('.message-list');
         } else {
-            messageLists = [getCurrentMessageList()];
+            messageLists = [document.getElementById(getMessageListId(channelName))];
         }
 
         messageLists.forEach(function(messageList) {
@@ -141,12 +142,12 @@ function init() {
         });
     }
 
-    function addSystemMessage(message) {
-        addMessage('*', message, '*', false);
+    function addSystemMessage(channelName, message) {
+        addMessage(channelName, '*', messge, '*');
     }
 
     function addSystemAnnouncement(message) {
-        addMessage('*', message, '*', true);
+        addMessage('*', '*', message, '*');
     }
 
     function getCurrentChannelName() {
@@ -173,7 +174,6 @@ function init() {
     function addChannel(channelInfo) {
         var existingChannel = document.querySelector('[data-channel-name="' + channelInfo.name + '"]');
         if (existingChannel !== null) {
-            changeChannel(existingChannel);
             return existingChannel;
         }
 
