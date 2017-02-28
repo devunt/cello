@@ -2,7 +2,9 @@ from flask import Flask
 from flask import abort, flash, redirect, render_template, url_for
 from flask import request, session
 
-from flask_login import current_user, login_user
+from flask_login import login_required
+from flask_login import current_user
+from flask_login import login_user, logout_user
 
 from login import login_manager
 from models import db
@@ -60,9 +62,11 @@ def authorized(provider):
         return abort(404)
 
 
-@app.route('/<name>')
-def channel(name):
-    return name
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 
 @app.before_first_request

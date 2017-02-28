@@ -9,12 +9,22 @@
         <div id="login">
             <div class="title">LOGIN</div>
             {% if current_user.is_authenticated %}
-                <button type="button" class="btn login-btn"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</button>
+                <div class="login-btn">
+                    <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+                </div>
             {% else %}
-                <button type="button" class="btn login-btn"><i class="fa fa-facebook-official" aria-hidden="true"></i>Sign in with Facebook</button>
-                <button type="button" class="btn login-btn"><i class="fa fa-github" aria-hidden="true"></i>Sign in with Github</button>
-                <button type="button" class="btn login-btn"><i class="fa fa-google" aria-hidden="true"></i>Sign in with Google</button>
-                <button type="button" class="btn login-btn"><i class="fa fa-twitter" aria-hidden="true"></i>Sign in with Twitter</button>
+                <div class="login-btn">
+                    <a href="{{ url_for('auth', provider='facebook') }}"><i class="fa fa-facebook-official" aria-hidden="true"></i>Sign in with Facebook</a>
+                </div>
+                <div class="login-btn">
+                    <a href="{{ url_for('auth', provider='github') }}"><i class="fa fa-github" aria-hidden="true"></i>Sign in with Github</a>
+                </div>
+                <div class="login-btn">
+                <a href="{{ url_for('auth', provider='google') }}"><i class="fa fa-google" aria-hidden="true"></i>Sign in with Google</a>
+                </div>
+                <div class="login-btn">
+                <a href="{{ url_for('auth', provider='twitter') }}"><i class="fa fa-twitter" aria-hidden="true"></i>Sign in with Twitter</a>
+                </div>
             {% endif %}
         </div>
     </div>

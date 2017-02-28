@@ -46,8 +46,8 @@ html, body {
     list-style: none;
     padding-left: 0; }
     #channel-list-wrapper #channel-list .channel {
-      padding: 2px 0;
-      font-size: .95em;
+      padding: 5px 0;
+      font-size: 1.2em;
       color: #ccc;
       cursor: pointer; }
     #channel-list-wrapper #channel-list .channel.current {
@@ -56,8 +56,11 @@ html, body {
   #channel-list-wrapper #login {
     position: absolute;
     bottom: 20px; }
+    #channel-list-wrapper #login a {
+      text-decoration: none; }
     #channel-list-wrapper #login i {
-      margin-right: 3px;
+      margin-right: 5px; }
+    #channel-list-wrapper #login a, #channel-list-wrapper #login a:visited {
       color: white; }
     #channel-list-wrapper #login .login-btn {
       padding: 11px 0;

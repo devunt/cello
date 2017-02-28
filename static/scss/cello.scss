@@ -78,9 +78,9 @@ html, body {
     padding-left: 0;
 
     .channel {
-      padding: 2px 0;
+      padding: 5px 0;
 
-      font-size: .95em;
+      font-size: 1.2em;
       color: #ccc;
 
       cursor: pointer;
@@ -96,9 +96,15 @@ html, body {
     position: absolute;
     bottom: 20px;
 
-    i {
-      margin-right: 3px;
+    a {
+      text-decoration: none;
+    }
 
+    i {
+      margin-right: 5px;
+    }
+
+    a, a:visited {
       color: white;
     }
 
