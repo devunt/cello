@@ -158,7 +158,11 @@ function init() {
     }
 
     function processCommand(command, args) {
-        if (commandHandler[command](args)) {
+        var handler = commandHandler[command];
+        if (!handler) {
+            addSystemMessage('No such command');
+            enableMessageInputBox(true);
+        } else if (handler(args)) {
             enableMessageInputBox(true);
         }
     }
