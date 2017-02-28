@@ -30,6 +30,10 @@ function init() {
 
         addSystemMessage('Connected to the server.');
         prepareInputBoxInput();
+
+        if (window.location.hash) {
+            processCommand('join', [window.location.hash]);
+        }
     });
 
     socket.on('message', function (data) {
