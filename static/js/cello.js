@@ -8,6 +8,7 @@ function init() {
     var messageInputBox = document.getElementById('message-inputbox');
     var messageInputBoxInput = document.getElementById('message-inputbox-input');
     var messageInputBoxBtn = document.getElementById('message-inputbox-btn');
+    var messageActionHolder = document.getElementById('message-action-placeholder');
     var currentChannel = null;
     var current_nickname = "";
 
@@ -40,6 +41,12 @@ function init() {
         if (data.channel == getCurrentChannelName()) {
             addMessage(data.user, data.message, data.hash);
         }
+    });
+
+    socket.on('message-edit', function (data) {
+        var message = document.querySelector('[data-hash="' + data.hash + '"]');
+        var messageText = message.querySelector('.message-text');
+        messageText.innerHTML = data.message;
     });
 
     socket.on('message-delete', function (data) {
@@ -98,6 +105,18 @@ function init() {
         message.appendChild(messageTime);
         message.appendChild(messageNick);
         message.appendChild(messageText);
+
+        if (nick == current_nickname) {
+            var messageAction = messageActionHolder.cloneNode(true);
+            messageAction.querySelector('.message-edit').addEventListener('click', function() {
+                // TODO: Edit message
+            });
+            messageAction.querySelector('.message-delete').addEventListener('click', function() {
+                socket.emit('message_delete', getCurrentChannelName(), hash);
+            });
+            messageAction.classList.remove('hidden');
+            message.appendChild(messageAction);
+        }
 
         message.setAttribute('data-hash', hash);
 
@@ -191,11 +210,6 @@ function init() {
         } else {
             socket.emit('message', getCurrentChannelName(), messageInputBoxInput.value);
         }
-    }
-
-    function deleteMessage(message) {
-        var hash = message.getAttribute('data-hash');
-        socket.emit('message_delete', getCurrentChannelName(), hash);
     }
 
     function processCommand(command, args) {

@@ -51,7 +51,8 @@ html, body {
     #channel-list-wrapper #channel-list .channel {
       padding: 2px 0;
       font-size: .95em;
-      color: #ccc; }
+      color: #ccc;
+      cursor: pointer; }
     #channel-list-wrapper #channel-list .channel.current {
       font-weight: bold;
       color: #fff; }
@@ -59,7 +60,7 @@ html, body {
 #chatting-wrapper {
   position: relative;
   display: inline-block;
-  min-height: 100%;
+  height: 100%;
   width: 67%;
   border-right: 1px solid lightgrey;
   box-sizing: border-box;
@@ -71,14 +72,36 @@ html, body {
   #chatting-wrapper #message-list-container {
     width: 100%;
     height: 100%; }
-  #chatting-wrapper .message-list {
-    position: absolute;
-    width: 100%;
-    height: 100%; }
-  #chatting-wrapper .message-nick {
-    display: inline-block; }
-  #chatting-wrapper .message-text {
-    display: inline-block; }
+  #chatting-wrapper .message {
+    position: relative;
+    margin-bottom: 5px; }
+    #chatting-wrapper .message:hover .message-action {
+      display: block; }
+    #chatting-wrapper .message .message-time {
+      display: inline-block;
+      font-size: 0.8em; }
+    #chatting-wrapper .message .message-list {
+      position: absolute;
+      width: 100%;
+      height: 100%; }
+    #chatting-wrapper .message .message-nick {
+      display: inline-block;
+      margin-right: 10px;
+      width: 120px;
+      font-weight: bold;
+      text-align: right; }
+    #chatting-wrapper .message .message-text {
+      display: inline-block;
+      width: calc(100% - 185px);
+      word-wrap: break-word;
+      vertical-align: top; }
+    #chatting-wrapper .message .message-action {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0; }
+      #chatting-wrapper .message .message-action i {
+        cursor: pointer; }
 
 #upper-container {
   float: left;
@@ -104,7 +127,8 @@ html, body {
   float: left;
   height: 100%;
   line-height: 40px;
-  padding-left: 10px;
+  padding: 0 10px;
+  background-color: white;
   font-weight: bold; }
 
 #message-inputbox-input-wrapper {
@@ -114,12 +138,13 @@ html, body {
 #message-inputbox-input {
   width: 100%;
   height: 100%;
-  padding: 0 1em;
+  padding-right: 1em;
   border: none;
   outline: none;
+  font-size: 1.1em;
   overflow: hidden;
   resize: none;
-  font-size: 1.1em; }
+  box-sizing: border-box; }
 
 #message-inputbox-btn {
   float: right;
